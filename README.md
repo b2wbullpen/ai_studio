@@ -56,22 +56,67 @@ Agents emerge dynamically from actual work patterns:
 - **Orbital Task Broker**: Jira & GitHub task queueing with runtime selection (Codex, Jules, Craft, Zapier, Local) and approval-gated state transitions.
 - **Cargo Bay & Loot**: Inventory management for Quantum Coffee, Warp Accelerators, Tachyon Crystals, and Levitation Tokens with an interactive Supply Crate drop opener.
 - **Dispatches & Notion Matrix**: Canonical Trill Astro Buzz transmissions log, message composer, and a 15-node interactive narrative dialogue player.
+- **Ink RPG**: Interactive branching stories written in [Ink](https://www.inklestudios.com/ink/) and compiled/played in-browser with `inkjs`; story events can award XP (see `src/services/inkStoryService.ts`).
+- **XP Visualization**: Recharts-based XP bar chart on the Bridge HUD.
 - **Operations Gateway**: Interactive Telegram bot terminal simulator (`/task`, `/approve`, `/delegate`, `/status`, `/briefing`) and automations monitor.
 
 ---
 
 ## 🛰️ Quick Start
 
+Requires [Bun](https://bun.sh) (a `bun.lock` is committed); npm also works.
+
 ```bash
-# Install dependencies
-npm install
-
-# Start Vite dev server on port 3000
-npm run dev
-
-# Build for production
-npm run build
+cp .env.example .env     # fill in only the integrations you need
+bun install
+bun run dev              # Vite dev server on http://localhost:3000
 ```
+
+| Script | Purpose |
+|:---|:---|
+| `bun run dev` | Start the dev server (port 3000, all interfaces) |
+| `bun run build` | Production build to `dist/` |
+| `bun run preview` | Serve the production build |
+| `bun run lint` | Type-check with `tsc --noEmit` |
+
+---
+
+## 🗂️ Project Structure
+
+```text
+src/
+  App.tsx, main.tsx     App shell and entry
+  components/           HUD, crew roster, missions, cargo bay, dispatches, Ink RPG, gateway
+  agents/, services/    Genesis engine, Ink story service, ambient audio
+  data/, db/            Seed data and D1 schema (schema.sql)
+skills/                 Agent skill docs (one per crew member) + n8n/catalog.json
+automations/            Automation definitions (automations.json)
+docs/                   Sources, Zapier setup, story nodes, design specs and plans
+themes/                 Theme tokens (theme.json)
+game_state.json         Sample game state
+```
+
+---
+
+## ⚙️ Configuration
+
+Copy `.env.example` to `.env`. No secrets are committed. Variables are grouped by integration:
+
+- **Cloudflare**: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`
+- **Telegram gateway**: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_GATEWAY_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `OPS_ADMIN_CHAT_ID`
+- **Zapier / Jira**: `ZAPIER_JIRA_CREATE_WEBHOOK`, `ZAPIER_WEBHOOK_SECRET`
+- **Notion / Craft**: `NOTION_API_TOKEN`, `NOTION_STORY_DB_ID`, `CRAFT_*`
+- **n8n**: `N8N_BASE_URL` (default `http://localhost:5678`), `N8N_API_KEY`
+- **Notifications / misc**: `NOTIFY_DEVICE_ID`, `NOTIFY_TOKEN`, `ONESECO_AVATAR_URL`
+
+---
+
+## 📚 Docs
+
+- [docs/sources.md](docs/sources.md): imported repositories and how they map here
+- [docs/opxero-zapier-setup.md](docs/opxero-zapier-setup.md): Zapier setup
+- [docs/superpowers/specs/2026-09-12-agent-mission-broker-design.md](docs/superpowers/specs/2026-09-12-agent-mission-broker-design.md) and its [plan](docs/superpowers/plans/2026-09-12-agent-mission-broker.md): mission broker design
+- [skills/](skills/): per-agent skill docs
 
 ---
 
